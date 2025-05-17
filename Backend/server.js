@@ -6,9 +6,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
+import fs from "fs";
+
 // Setup __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 // Load environment variables
 dotenv.config();
@@ -26,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Serve React build (static site)
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // MySQL connection pool
 const pool = mysql.createPool({
@@ -135,12 +138,6 @@ app.post("/delete", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-/* ---------------- Fallback for React ---------------- */
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 /* ---------------- Start Server ---------------- */
